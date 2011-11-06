@@ -2,8 +2,9 @@
 // all config stuff
 
 //this is used by the read plugin, if set to false then read will
-//use the info 'title' in json when displaying the dir lists
+//use the info 'title' in json when displaying the dirlists
 //instead of the raw dir name
+
 define('DISPLAY_DIRS','false');
 
 define('TEMPLATE', 'my_template_name');
@@ -24,7 +25,7 @@ define('BOOKI_DIR','_booki');
 define('TEMPLATES_DIR','_templates');
 
 //make sure the target is not with http:// or a trailing slash etc
-define('BOOKI_SERVER_TARGET','booki.flossmanuals.net');
+define('BOOKI_SERVER_TARGET','fi-new.flossmanuals.net/kirjoita');
 
 //make sure objavi has no trailing slash
 define('OBJAVI_SERVER_URL','http://objavi.booki.cc');
