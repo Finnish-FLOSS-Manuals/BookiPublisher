@@ -1,60 +1,104 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="<textdirection/>">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title></title>
+    <title><book-title/>: <chapter-name/></title>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="icon" href="_templates/fm_resources/fl2.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="_templates/fm_resources/fm_book.css" type="text/css" />
-   <link type="text/css" href="_templates/prettify/src/prettify.css" rel="Stylesheet" >
-<script type="text/javascript" src="_templates/prettify/src/prettify.js"></script>
+    <link rel="icon" href="templates/fm_resources/fl2.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="templates/fm_resources/fm_book.css" type="text/css" />
+    <script type="text/javascript" src="templates/fm_resources/jquery.js"></script>
 
+    <script type="text/javascript" src="templates/fm_resources/fm_book.js"></script>
+<script type="text/javascript">
 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11299986-2']);
+  _gaq.push(['_trackPageview']);
 
-    <script type="text/javascript" src="_templates/jquery/js/jquery-1.6.1.min.js"></script>
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 
-    <script type="text/javascript" src="_templates/fm_resources/fm_book.js"></script>
+</script>
 </head>
-<body onload="prettyPrint();">
+<body>
 <div id="home">
-  <a href="http://www.flossmanuals.net"><img src="_templates/fm_resources/top_read_back.gif" border="0" alt="" /></a>
+  <a href="/"><img src="templates/fm_resources/top_read_back.gif" border="0" alt="" /></a>
+</div>
+
 </div>
 
 <div id="pdf">
-  <a href="http://en.flossmanuals.net/<epub-location/>"><img src="_templates/fm_resources/epub.gif" border="0" alt="" /></a>
-  <a href="http://en.flossmanuals.net/<pdf-location/>"><img src="_templates/fm_resources/pdf.gif" border="0" alt="" /></a>
-  <a href="/<book-dir/>/_all"><img src="_templates/fm_resources/print.gif" border="0" alt="" /></a>
+  <a href="<epub-location/>"><img src="templates/fm_resources/epub.gif" border="0" alt="" /></a>
+  <a href="<pdf-location/>"><img src="templates/fm_resources/pdf.gif" border="0" alt="" /></a>
+  <a href="_all"><img src="_templates/fm_resources/print.gif" border="0" alt="" /></a>
+ 
 </div>
+
 
 <div id="index-book-title">
 	<book-title/>
+
 </div>
 <div id="main">
   <div class="navbar">
-    <div class="arrow top left"><a href="#"><img src="_templates/fm_resources/lefttext.png" style="height:20px !important;" alt="" /></a></div>
-    <div class="arrow top right"><a href="#"><img src="_templates/fm_resources/righttext.png" style="height:20px !important;" alt="" /></a></div>
-<!--    <div id="edit-links">
-      <a href='http://www.booki.cc/'>Edit this Book</a>
-    </div>
--->
+    <div class="arrow top left"><a href="#"><img src="templates/fm_resources/lefttext.png" height="20" alt="" /></a></div>
+    <div class="arrow top right"><a href="#"><img src="templates/fm_resources/righttext.png" height="20" alt="" /></a></div>
   </div>
+
+
+
+
+<div id="edit-links">
+<a href="http://fi.flossmanuals.net/blog/forums/topic/<comment-name/>/?view=all
+"><b>KOMMENTOI</b></a>
+<a href="http://fi.flossmanuals.net/kirjoita/<muokkaa-name/>"><b>MUOKKAA</b></a><BR>
+
+<div id="identishare" style="vertical-align: bottom;"></div>
+<script type="text/javascript" src="http://www.tildehash.com/identishare.php" defer="defer"></script> 
+<img src="http://iliketoast.net/img/diasporaWebBadge80x15_3.png" border="0" onClick="dshare();">
+<script type="text/javascript">
+
+function dshare() {
+
+   var url = window.location.href;
+
+   var title = document.title;
+
+   window.open('http://iliketoast.net/dshare.html?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title),'dshare','location=no,links=no,scrollbars=no,toolbar=no,width=620,height=400');
+
+   return false;
+
+}
+
+</script>
+
+</div>
+
 
   <div class="fm-content">
     <content-goes-here/>
   </div>
 <br><br>
-<div class="comment-box">
-your comment:<br>
-<widget-comments/>
-</div>
+
+
   <div class="navbar">
     <div class="arrow bottom left"><a href="#"><img src="_templates/fm_resources/lefttext.png" style="height:20px !important;" alt="" /></a></div>
     <div class="arrow bottom right"><a href="#"><img src="_templates/fm_resources/righttext.png" style="height:20px !important;" alt="" /></a></div>
   </div>
 </div>
+
+<br><br>
+</div>
+</div>
 <!-- Piwik -->
 <script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.flossmanuals.net/" : "http://piwik.flossmanuals.net/");
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://fi.flossmanuals.net/piwik/piwik/" : "http://fi.flossmanuals.net/piwik/piwik/");
 document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 try {
@@ -62,9 +106,11 @@ var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
 piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
 } catch( err ) {}
-</script><noscript><p><img src="http://piwik.flossmanuals.net/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tracking Code -->
-<analyzer/>
-</body>
+</script><noscript><p><img src="http://fi.flossmanuals.net/piwik/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code --></body>
 </html>
+
+
+
+
 
