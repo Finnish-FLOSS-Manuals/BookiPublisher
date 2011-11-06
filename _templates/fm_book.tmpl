@@ -1,16 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title><book-title/>: <chapter-name/></title>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="icon" href="templates/fm_resources/fl2.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="templates/fm_resources/fm_book.css" type="text/css" />
-    <script type="text/javascript" src="templates/fm_resources/jquery.js"></script>
-    <script type="text/javascript" src="templates/fm_resources/fm_book.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="icon" href="templates/fm_resources/fl2.ico" type="image/x-icon" />
+<link rel="stylesheet" href="templates/fm_resources/fm_book.css" type="text/css" />
+<script type="text/javascript" src="_templates/jquery/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="templates/fm_resources/fm_book.js"></script>
+<link type="text/css" href="_templates/prettify/src/prettify.css" rel="Stylesheet" >
+<script type="text/javascript" src="_templates/prettify/src/prettify.js"></script>
 
 <!-- Start Google Analytics --> 
 <script type="text/javascript">
@@ -29,8 +31,9 @@
 
 </head>
 <body>
+<body onload="prettyPrint();">
 <div id="home">
-  <a href="/"><img src="templates/fm_resources/top_read_back.gif" border="0" alt="" /></a>
+  <a href="http://www.flossmanuals.net"><img src="_templates/fm_resources/top_read_back.gif" border="0" alt="" /></a>
 </div>
 
 </div>
@@ -67,6 +70,10 @@
   </div>
 <br><br>
 
+<div class="comment-box">
+your comment:<br>
+<widget-comments/>
+</div>
 
   <div class="navbar">
     <div class="arrow bottom left"><a href="#"><img src="_templates/fm_resources/lefttext.png" style="height:20px !important;" alt="" /></a></div>
@@ -88,7 +95,9 @@ piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
 } catch( err ) {}
 </script><noscript><p><img src="http://fi.flossmanuals.net/piwik/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tracking Code --></body>
+<!-- End Piwik Tracking Code -->
+<analyzer/>
+</body>
 </html>
 
 
