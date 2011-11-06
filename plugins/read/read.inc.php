@@ -134,7 +134,7 @@ function read_index() {
       $content .= $chaptercontent;
     }
     // $content = addTemplate('book', $content);
-    echo '<style type="text/css">.menu-goes-here { display: none }</style>'.$content;
+    echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>'.$book.'</title><style type="text/css">.menu-goes-here { display: none }</style><body><div style="width: 600px;">'.$content.'</div></body></html>';
   } else {
     $book=strtolower($book);
     //echo "ch=$chapter book=$book";
