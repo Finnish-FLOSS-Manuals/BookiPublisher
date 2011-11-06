@@ -88,7 +88,7 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 
 	//create objavi url to create the book
-	$url=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=templated_html&method=poll&html_template=".$template;
+	$url=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=templated_html&html_template=".$template;
 		$logger="requesting book to be created. Request is: " . $url;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 
@@ -244,7 +244,7 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$updatetext.= "<br>"._("Getting PDF");
 		file_put_contents($update,$updatetext);
-		$pdfurl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=web";
+		$pdfurl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=book&toc_header=Sisällysluettelo&license=GPLv2";
 		$logger="pdf url is $pdfurl";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$gotit = tempnam("tmp/", "pdf_");
