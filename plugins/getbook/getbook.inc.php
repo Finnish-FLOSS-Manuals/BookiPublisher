@@ -1,33 +1,25 @@
 <?php
 
+//we need this lib for deleting dirs
+include_once("lib/files.inc.php");
+
 function getbook_admin() {
   if(!is_dir("tmp")) mkdir("tmp");
   $update = tempnam("tmp/", "update_");
-  $updatetext = _("Processing...")."<br>"._("Requesting book");
-  $book = array_value($_POST, 'book');
-  $bookupdate = null;
-
-  // get users books
-  $tableUsers = new Axon(DB_TABLE_USERS);
-  $books = array();
-  if ($username = array_value($_SESSION, 'username')) {
-      $tableUsers->load("username='$username'");
-      if (!$tableUsers->dry()) {
-          $books = unserialize($tableUsers->books);
-      }
-  }
+  $updatetext.= _("Processing...")."<br>"._("Requesting book");
+  $book = $_POST['book'];
 
   //need to pass tmpfile for updates since the html is not updated until the end
-  $tmpfilename = array_value($_GET, 'tmpfilename');
+  $tmpfilename = $_GET['tmpfilename'];
 
   //if no request then make a form
-  if ($book == ''){
-  	$html="<h1>"._("GetBook Plugin")."</h1>";
+  if ($book==''){
+  	$html.="<h1>"._("GetBook Plugin")."</h1>";
 	//div for displaying feedback
   	$html.="<div id='contentArea'> </div>";
 	//feedback javascript
 	$html.='
-		<script type="text/javascript" src="templates/jquery/js/jquery-1.6.1.min.js"></script>
+		<script type="text/javascript" src="templates/fm_resources/jquery.js"></script>
 		<script type="text/javascript">
 			function contentDisp()
         			{
@@ -50,10 +42,11 @@ function getbook_admin() {
 	$html.="<div id='bookform'><form method='POST' action='admin.php?plugin=getbook&tmpfilename=".basename($update)."'>";
 	$html.="<input type='hidden' name='tmpfilename' value='".basename($update)."'>";
 	$html.=_("Choose Book")."<br><select id='book' name='book'>";
-    foreach ((array)$books as $key => $value) {
-        $html .= "<option value=\"$key\">$value</option>";
-    }
-    $html.="</select><br>";
+	//ask objavi for the list of available books - hardcoded to fm...
+	$url=OBJAVI_SERVER_URL."/?server=".BOOKI_SERVER_TARGET."&book=null&mode=booklist";
+	$file=file_get_contents($url);
+
+	$html.= $file."</select><br>";
 	$html.="<br>"._("Title")." : <input type=text name='title'></input>";
 	$html.="<br><input type=CHECKBOX name='getEpub' CHECKED>"._("get epub")."</input>";
 	$html.="<br><input type=CHECKBOX name='getPDF' CHECKED>"._("get screen formatted PDF")."</input>";
@@ -62,27 +55,21 @@ function getbook_admin() {
   	return $html;
   }
   else {
-
-    // check book access
-    if (!array_value($books, $book)) {
-        return 'You have no permissions to get ' . $book;
-    }
-
   	//does the book exist already? - will effect other functions
 	$logger="\n\n[".date('Y-m-di h:i:s A')."]" ." starting to get book - ". $book;
 	file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
   	if (is_dir(BOOKI_DIR."/$book")) {
 		$bookupdate = "TRUE";
-		$logger="book already exists";
+		$logger="book already exists so not touching json data";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 	}
 	$update="tmp/".$tmpfilename;
 	$logger="tmp file name is ". $tmpfilename;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-	//we dont use templates from objavi we handlethem locally so we just need raw html
-	//... would be nice to fetch a toc.txt too
+	//we dont use templates from objavi we handlethem locally so we just need raw html 
+	//... would be nice to fetch a toc.txt too	
 	$template=rawurlencode("<content-goes-here /><menu-goes-here/>");
-
+	
 	$gotit = tempnam("tmp/", "book_");
 		$logger="new temp name is $gotit";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
@@ -91,13 +78,13 @@ function getbook_admin() {
 	$url=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=templated_html&html_template=".$template;
 		$logger="requesting book to be created. Request is: " . $url;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-
+	
 	//this is the update routine for browser feedback via jquery
 	$updatetext.= "<br>"._("Asking objavi for the raw files without templates");
 	file_put_contents($update,$updatetext);
-
-	//tell objavi to create the book -
-	//it returns a html file (stored in the temp file $gotit)
+        
+	//tell objavi to create the book - 
+	//it returns a html file (stored in the temp file $gotit) 
 	//with info that needs to be parsed
 		//$logger="getting book";
 		//file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
@@ -109,7 +96,7 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 	}
 
-	//find the location of the published html on the objavi server
+	//find the location of the published html on the objavi server 
 	//...could be done better (using basename()?)
 	$file = file_get_contents($gotit);
 	if(strpos($file, "books/")) {
@@ -123,17 +110,17 @@ function getbook_admin() {
 	$updatetext.= "<br>"._("Book currently being created by Objavi at")." : ".OBJAVI_SERVER_URL."/".$bookurl;
 	$updatetext.= "<br>"._("(this will take a few minutes)");
 	file_put_contents($update,$updatetext);
-
-	//stupid timeout...should instead be polling
-
-//poll url is http://objavi.flossmanuals.net/progress/bookurl.txt
+	
+	//stupid timeout...should instead be polling 
+	
+//poll url is http://objavi.flossmanuals.net/progress/bookurl.txt 
 	sleep(180);
-
+	
 	$updatetext.= "<br>"._("Fetching and saving tar.gz");
 	file_put_contents($update,$updatetext);
 		$logger="fetching tar from objavi: ".OBJAVI_SERVER_URL."/$bookurl".".tar.gz";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-
+        	
 	//finally...get the tar.gz
 	//file_put_contents is using too much memory...try freeing it using wget
 	$file = file_get_contents(OBJAVI_SERVER_URL."/".$bookurl.".tar.gz");
@@ -142,20 +129,20 @@ function getbook_admin() {
 	file_put_contents("tmp/$book.tar.gz",$file);
 	//$file = "http://objavi.flossmanuals.net/".$bookurl.".tar.gz";
 	//shell_exec("wget \"".$file."\" tmp/$book.tar.gz");
-
+	
 	$updatetext.= "<br>"._("Untarring archive");
 	file_put_contents($update,$updatetext);
-
+	
 	//untar the dir in tmp/ and work out the filename
-	//unix specific...bad luck windozers
+	//unix specific...bad luck windozers	
 		$logger="unpacking archive";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 	$untarDir = preg_split("[/]",trim(shell_exec("cd tmp/; tar -ztf $book.tar.gz")));
 	shell_exec("tar -zxvf tmp/$book.tar.gz --directory tmp");
-
+	
 	$updatetext.= "<br>"._("Moving file to booki dir");
 	file_put_contents($update,$updatetext);
-
+	
 	//move the untarred dir to booki/
 	//and rename it to $book
 	//first remove the old one if it exists
@@ -171,7 +158,7 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		rename("tmp/$untarDir[0]", BOOKI_DIR."/$book");
 	}
-
+	
 	$updatetext.= "<br>"._("Renaming files");
 	file_put_contents($update,$updatetext);
 		$logger="renaming files";
@@ -187,7 +174,7 @@ function getbook_admin() {
 		}
 		closedir($dh);
 	}
-	foreach ($filelist as $file) {
+	foreach ($filelist as $file) {	
                 if($file != "." && $file != ".." && $file!="static") {
                         $newfile=substr($file,0,-4)."txt";
                         $page = file_get_contents(BOOKI_DIR."/$book/$file");
@@ -215,28 +202,59 @@ function getbook_admin() {
 */
 	$updatetext.= "<br>"._("Adding meta info");
 	file_put_contents($update,$updatetext);
-		$logger="Adding meta data to db";
+		$logger="Adding meta data to json";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-
-	//begin constructing info for db
-	$tableBooks = new Axon(DB_TABLE_BOOKS);
-	$tableBooks->load("dir='$book'");
-	if ($tableBooks->dry()) {
-	    $tableBooks->reset();
-        $tableBooks->dir = $book;
-	    $tableBooks->title = array_value($_POST, 'title') ? array_value($_POST, 'title') : $book;
-	    $tableBooks->date = strftime("%Y-%m-%d %H:%M");
-    	$tableBooks->description = "";
-    	$tableBooks->status = _("New");
-    	$tableBooks->visible = "on";
-    	$tableBooks->category = _("New");
+	
+	//begin constructing info for data/bookInfo.json
+	$post = Array();
+	$post["dir"] = $book;
+	if ($_POST["title"]=="") {
+		$post["title"] = $book;
+	} else {
+		$post["title"]=$_POST["title"];
 	}
-	if (isset($_POST["getPDF"])) $tableBooks->pdf = BOOKI_DIR."/$book/$book.pdf";
-	if (isset($_POST["getEpub"])) $tableBooks->epub = BOOKI_DIR."/$book/$book.epub";
-	$tableBooks->modified = strftime("%Y-%m-%d %H:%M");
-    $tableBooks->save();
-	$logger="db updated";
-	file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+	$post["date"] = strftime("%Y-%m-%d %H:%M");
+	$post["OS"] = "";
+	$post["description"] = "";
+	$post["status"] = _("New");
+	$post["visible"] = "on";
+	$post["category"] = _("New");
+	if (isset($_POST["getPDF"])) $post["pdf"] = BOOKI_DIR."/$book/$book.pdf";
+	if (isset($_POST["getEpub"])) $post["epub"] = BOOKI_DIR."/$book/$book.epub";
+	$post["category"] = _("New");
+
+	//open existing bookInfo file
+        $info_file = "data/bookInfo.json";
+        if(file_exists($info_file)) {
+            $info = file_get_contents($info_file);
+            $info = json_decode($info);
+        } 
+        
+	//add new info to old info
+	//but only do it if its a new book (not an update)
+	//for updates just update modified field
+	if ($bookupdate!=="TRUE") {
+		$info[] = $post;
+        } else {
+		$info=ObjectToArray( $info );
+		$info=replaceArrayValue($info,"dir",$book,"modified",strftime("%Y-%m-%d %H:%M"));		
+		if (isset($_POST["getPDF"])) $newepdf = BOOKI_DIR."/$book/$book.pdf";
+		if (isset($_POST["getEpub"])) $newepub = BOOKI_DIR."/$book/$book.epub";
+		$info=replaceArrayValue($info,"dir",$book,"epub",$newepub);		
+		$info=replaceArrayValue($info,"dir",$book,"epub",$newepub);		
+		$info=replaceArrayValue($info,"dir",$book,"status","updated!");		
+	}
+
+        //write json
+	$info = json_encode($info);
+		$logger="json is " . var_dump($post);
+		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+        if(!file_put_contents ($info_file, $info)) {
+		$updatetext.= "<br><font color=red>"._("Failed to write meta info")."</a>";
+		file_put_contents($update,$updatetext);
+		$logger="json did not write";
+		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+	}
 
 	//did they ask for a pdf?...go get it
 	if (isset($_POST["getPDF"])){
@@ -264,17 +282,23 @@ function getbook_admin() {
         		$start=strpos($file, "books/");
         		$end=strpos($file, "\"",$start);
 			$pdf_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
-		$logger="getting pdf from here $pdf_location";
+		$logger="getting pdf from here $pdflocation";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		}
-		$pdf = file_get_contents($pdf_location);
-
+                $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $pdf_location);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);	
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);	
+                $pdfcontents = curl_exec ($ch);
+                curl_close ($ch);
+		$pdf = $pdfcontents;
+		
 		file_put_contents("tmp/$book.pdf",$pdf);
 		rename("tmp/$book.pdf", BOOKI_DIR."/$book/$book.pdf");
 		$logger="pdf is stored here tmp/$book.pdf and being moved to here ".BOOKI_DIR."/$book/$book.pdf";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 	}
-
+	
 	//did they ask for an epub?...go get it
 	if (isset($_POST["getEpub"])){
 		$logger="[".date('Y-m-di h:i:s A')."]" ." starting to get EPUB";
@@ -305,7 +329,7 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		}
 		$epub = file_get_contents($epub_location);
-
+		
 		file_put_contents("tmp/$book.epub",$epub);
 		rename("tmp/$book.epub", BOOKI_DIR."/$book/$book.epub");
 		$logger="moving from tmp/$book.epub to ".BOOKI_DIR."/$book/$book.epub";
@@ -313,8 +337,7 @@ function getbook_admin() {
 	}
 
 	//return done page
-  	$html ="<h1>"._("GetBook Plugin")."</h1>";
-  	$html.=_("Done. Check the book here") . " <a href='index.php?book=$book&chapter=index'>$book</a>.";
+  	$html.="<h1>"._("GetBook Plugin")."</h1>";
   	$html.="<br>"._("Use the bookInfo plugin to edit the details.");
 		$logger="done";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
