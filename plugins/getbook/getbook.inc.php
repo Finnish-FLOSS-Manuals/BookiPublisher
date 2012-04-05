@@ -114,7 +114,7 @@ function getbook_admin() {
 	//stupid timeout...should instead be polling 
 	
 //poll url is http://objavi.flossmanuals.net/progress/bookurl.txt 
-	sleep(180);
+//	sleep(180);
 	
 	$updatetext.= "<br>"._("Fetching and saving tar.gz");
 	file_put_contents($update,$updatetext);
@@ -123,10 +123,23 @@ function getbook_admin() {
         	
 	//finally...get the tar.gz
 	//file_put_contents is using too much memory...try freeing it using wget
-	$file = file_get_contents(OBJAVI_SERVER_URL."/".$bookurl.".tar.gz");
+//	$file = file_get_contents(OBJAVI_SERVER_URL."/".$bookurl.".tar.gz");
 		$logger="creating tar " . $book . ".tar.gz";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-	file_put_contents("tmp/$book.tar.gz",$file);
+		$webbookurl =  OBJAVI_SERVER_URL."/".$bookurl.".tar.gz";
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $webbookurl);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                $file = curl_exec ($ch);
+                curl_close ($ch);
+  		file_put_contents("tmp/$book.tar.gz",$file);
+
+
+
+
 	//$file = "http://objavi.flossmanuals.net/".$bookurl.".tar.gz";
 	//shell_exec("wget \"".$file."\" tmp/$book.tar.gz");
 	
@@ -262,42 +275,65 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$updatetext.= "<br>"._("Getting PDF");
 		file_put_contents($update,$updatetext);
-		$pdfurl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=book&toc_header=Sisällysluettelo&license=GPLv2";
+		$pdfurl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=web&toc_header=Sisällysluettelo&license=GPLv2";
 		$logger="pdf url is $pdfurl";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$gotit = tempnam("tmp/", "pdf_");
 		$logger="tempnam is $gotit";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-		try {
-			file_put_contents($gotit, file_get_contents($pdfurl));
-		} catch (Exception $e) {
-			$html.=_("you are not online");
-		$logger="failed (no connection?)";
-		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-		}
 
-		//find the location of the published epub on the objavi server
-		$file = file_get_contents($gotit);
-		if(strpos($file, "books/")) {
-        		$start=strpos($file, "books/");
-        		$end=strpos($file, "\"",$start);
-			$pdf_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
-		$logger="getting pdf from here $pdflocation";
-		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-		}
-                $ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $pdf_location);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);	
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);	
-                $pdfcontents = curl_exec ($ch);
-                curl_close ($ch);
-		$pdf = $pdfcontents;
-		
-		file_put_contents("tmp/$book.pdf",$pdf);
-		rename("tmp/$book.pdf", BOOKI_DIR."/$book/$book.pdf");
-		$logger="pdf is stored here tmp/$book.pdf and being moved to here ".BOOKI_DIR."/$book/$book.pdf";
-		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-	}
+
+              $ch = curl_init();
+
+              curl_setopt($ch, CURLOPT_URL, $pdfurl);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+	      curl_setopt($ch, CURLOPT_HEADER, 0);
+	      curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+              $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdfurl;
+              file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+              $kurlaaja = curl_exec ($ch);
+              file_put_contents($gotit, $kurlaaja);
+	      curl_close ($ch);
+              $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdfurl;
+              file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+
+	      
+
+
+		     $file = file_get_contents($gotit);
+		     if(strpos($file, "books/")) {
+         	     $start=strpos($file, "books/");
+        	     $end=strpos($file, "\"",$start);
+		     $pdf_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
+		     $logger="getting pdf from here $pdf_location";
+		     file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+		     }
+
+		     
+
+              $ch = curl_init($pdf_location);
+	      $fp = fopen("objavi.pdf", "r+");
+              curl_setopt($ch, CURLOPT_URL, $pdf_location);
+	      $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdf_location;
+              file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+	      curl_setopt($ch, CURLOPT_HEADER, 0);
+              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+	      curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+	      curl_setopt($ch, CURLOPT_FILE, $fp);
+              curl_exec ($ch);
+              curl_close ($ch);
+              $pdf = $fp;
+              $logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdf_location;
+              file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+
+
+		     file_put_contents("tmp/$book.pdf",$pdf);
+	             rename("tmp/$book.pdf", BOOKI_DIR."/$book/$book.pdf");
+		     $logger="pdf is stored here tmp/$book.pdf and being moved to here ".BOOKI_DIR."/$book/$book.pdf";
+		     file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+		     }
+
 	
 	//did they ask for an epub?...go get it
 	if (isset($_POST["getEpub"])){
@@ -379,5 +415,4 @@ function getbook_plugin() {
 			       "version" => "1.0")
 	       );
 }
-
 ?>
