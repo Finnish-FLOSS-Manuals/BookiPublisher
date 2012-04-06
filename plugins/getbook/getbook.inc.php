@@ -312,18 +312,16 @@ function getbook_admin() {
 
 		     
 
-              $ch = curl_init($pdf_location);
-	      $fp = fopen("objavi.pdf", "r+");
+              $ch = curl_init();
               curl_setopt($ch, CURLOPT_URL, $pdf_location);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+              curl_setopt($ch, CURLOPT_HEADER, 0);
+              curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 	      $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdf_location;
               file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-	      curl_setopt($ch, CURLOPT_HEADER, 0);
-              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-	      curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-	      curl_setopt($ch, CURLOPT_FILE, $fp);
-              curl_exec ($ch);
+              $pdf = curl_exec ($ch);
               curl_close ($ch);
-              $pdf = $fp;
               $logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdf_location;
               file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 
@@ -415,4 +413,5 @@ function getbook_plugin() {
 			       "version" => "1.0")
 	       );
 }
+
 ?>
