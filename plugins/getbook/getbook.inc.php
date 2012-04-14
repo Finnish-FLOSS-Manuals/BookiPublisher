@@ -295,7 +295,7 @@ function getbook_admin() {
               $kurlaaja = curl_exec ($ch);
               file_put_contents($gotit, $kurlaaja);
 	      curl_close ($ch);
-              $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdfurl;
+              $logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdfurl;
               file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 
 	      
@@ -315,6 +315,7 @@ function getbook_admin() {
               $ch = curl_init();
               curl_setopt($ch, CURLOPT_URL, $pdf_location);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	      curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
               curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
               curl_setopt($ch, CURLOPT_HEADER, 0);
               curl_setopt($ch, CURLOPT_TIMEOUT, 120);
