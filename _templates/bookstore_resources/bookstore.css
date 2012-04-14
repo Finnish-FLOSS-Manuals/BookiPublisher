@@ -4,6 +4,8 @@
       border: 1px solid #666;
       padding-right:0px;
       margin-right:7px;
+      height:140px;
+      width:90px;
 }
 #lulu-storefront-items {
 	margin-left: 0px;
@@ -100,7 +102,7 @@ a.lulu-item-buynow   {
 	padding-left:5px;
 	padding-right:5px;
 	margin-left:0px;
-	width:150px;
+	width:240px;
 }
 #lulu-storefront h2.lulu-item-title  {
 	border:0px;
