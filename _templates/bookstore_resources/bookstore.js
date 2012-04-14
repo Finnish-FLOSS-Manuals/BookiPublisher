@@ -1,4 +1,5 @@
-var fm_data = {"title":"FLOSS Manuals's Storefront","url":"http:\/\/stores.lulu.com\/flossmanuals","items":[{"title":"Inkscape","url":"http:\/\/www.lulu.com\/content\/4617381","description":"The premier vector graphic editor for OSX, Linux, Windows. The manual is written by the official Inkscape documentation team and friends.","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/4617000\/4617381\/1\/preview\/promo_4617381.jpg","date":"Fri, 24 Oct 2008 18:21:59"},{"title":"How to Bypass Internet Censorship","url":"http:\/\/www.lulu.com\/content\/11017462","description":"Inform yourself on how internet censorship works and how to route around it with free software. Includes an excellent overview of the techniques and tools for beginners and advanced users..","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/4904000\/4904448\/1\/preview\/promo_4904448.jpg","date":"Fri, 15 Nov 2008 18:21:59"},{"title":"FLOSS Manuals","url":"http:\/\/www.lulu.com\/content\/4582230","description":"Learn how to use FLOSS Manuals. Includes essay by founder Adam Hyde about why we need free documentation.","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/4582000\/4582230\/1\/preview\/promo_4582230.jpg","date":"Tue, 21 Oct 2008 20:57:28"},{"title":"SUGAR USERS GUIDE","url":"http:\/\/www.lulu.com\/content\/3865497","description":"Sugar is most well known as being the Desktop on the One Laptop per Child computers. However you can also install Sugar on your own computer. Learn more about this exciting new approach to learning how to use a computer...","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/3865000\/3865497\/6\/preview\/promo_3865497.jpg","date":"Fri, 10 Oct 2008 16:59:10"},{"title":"OLPC LAPTOP USERS GUIDE","url":"http:\/\/www.lulu.com\/content\/4439260","description":"The book to go with the OLPC hardware. Good with the Give 1 Get 1 program.","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/3865000\/3865224\/9\/preview\/promo_3865224.jpg","date":"Fri, 10 Oct 2008 16:53:00"},{"title":"INTRODUCTION TO THE GNU/LINUX COMMAND LINE","url":"http:\/\/www.lulu.com\/content\/6521146","description":"Learn the power of the command line! Written for the beginner by friendly experts.","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/6521000\/6521146\/1\/preview\/promo_6521146.jpg","date":"Fri, 10 Oct 2008 16:53:00"},{"title":"Open Translation Tools","url":"http:\/\/www.lulu.com\/content\/7339299","description":"A handbook for the Open Translation Movement","thumb":"http:\/\/www.lulu.com\/items\/volume_65\/7339000\/7339299\/1/preview\/promo_7339299.jpg","date":"Fri, 29 June 2009 18:00:00"},{"title":"Video Subtitling","url":"http:\/\/www.lulu.com\/content\/7339340","description":"A handbook for creating video subtitles","thumb":"http:\/\/www.lulu.com\/items\/volume_65\/7339000\/7339340\/1\/preview\/promo_7339340.jpg","date":"Fri, 29 June 2009 18:30:00"},{"title":"CiviCRM","url":"http:\/\/www.lulu.com\/content\/7098434","description":"A fantastic guide to learning how to use the premier Constituent Relationship Manager - CiviCRM. Ideally suited for non-profit organisations.","thumb":"http:\/\/www.lulu.com\/items\/volume_65\/7098000\/7098434\/1\/preview\/promo_7098434.jpg","date":"Fri, 9 May 2009 18:00:00"},{"title":"FIREFOX","url":"http:\/\/www.lulu.com\/content\/6480979","description":"Learn how to get more from the worlds best browser!","thumb":"http:\/\/www.lulu.com\/items\/volume_64\/6480000\/6480979\/3\/preview\/promo_6480979.jpg","date":"Fri, 10 Oct 2008 16:53:00"}]};
+var fm_data = {"title":"FLOSS Manuals's Storefront","url":"http:\/\/stores.lulu.com\/flossmanuals","items":[{"title":"Komentorivin perusteet","url":"http:\/\/www.lulu.com\/product\/paperback\/komentorivin-perusteet\/18883624","description":"FLOSS Manualsin komentorivin perusteet -opas suomeksi!","thumb":"http://www.lulu.com/items/volume_74/12561000/12561466/3/preview/detail_12561466.jpg?1333532999","date":"Wed, 08 Feb 2012 21:00:00"},{"title":"LibreOffice","url":"http:\/\/www.lulu.com\/product\/paperback\/libreoffice\/18883781","description":"LibreOffice-oppaassa käsitellään vapaan ja avoimen toimisto-ohjelman käyttö tekstinkäsittelyyn, taulukkolaskentaan ja presentaatioiden tekemiseen.","thumb":"http://www.lulu.com/items/volume_74/12573000/12573454/2/preview/detail_12573454.jpg?1333532901","date":"Wed, 08 Feb 2012 21:00:00"}]};
+
 
 var FM = {
     'config': {
@@ -32,10 +33,12 @@ var FM = {
 
     'create_item': function(i) {
        var s = '<li class="lulu-item">';
+	s += '<a class="lulu-item-buynow" href="' + fm_data.items[i].url + '">';
        s += '<img class="lulu-item-thumbnail" src="' + fm_data.items[i].thumb + '" />';
+	s += '</a>';
        s += '<h2 class="lulu-item-title"><a href="' + fm_data.items[i].url + '">' + fm_data.items[i].title + '</a></h2>';
        s += '<div class="lulu-item-description">' + fm_data.items[i].description + '</div>';
-       s += '<a class="lulu-item-buynow" href="' + fm_data.items[i].url + '">Buy Now!</a>';
+       s += '<a class="lulu-item-buynow" href="' + fm_data.items[i].url + '">Osta nyt!</a>';
        s += '</li>';
 
        return s;
@@ -136,5 +139,4 @@ var FM = {
 	
     }
 };
-
 
