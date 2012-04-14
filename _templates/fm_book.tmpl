@@ -1,24 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title><book-title/>: <chapter-name/></title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="icon" href="templates/fm_resources/fl2.ico" type="image/x-icon" />
-<link rel="stylesheet" href="templates/fm_resources/fm_book.css" type="text/css" />
-<script type="text/javascript" src="_templates/jquery/js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="templates/fm_resources/fm_book.js"></script>
-<link type="text/css" href="_templates/prettify/src/prettify.css" rel="Stylesheet" >
-<script type="text/javascript" src="_templates/prettify/src/prettify.js"></script>
+<head>
 
-<!-- Start Google Analytics --> 
+    <title><book-title/> <chapter-name/></title>
+
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="icon" href="templates/fm_resources/fl2.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="templates/fm_resources/kirjaranska.css" type="text/css" />
+    <script type="text/javascript" src="templates/fm_resources/jquery.js"></script>
+    <script type="text/javascript" src="templates/fm_resources/fm_book.js"></script>
+    <link rel="stylesheet" href="commentics/comments/css/stylesheet.css"></scripts>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11299986-2']);
+  _gaq.push(['_setAccount', 'UA-27919770-1']);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -26,81 +26,65 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
+
 </script>
-<!-- End Google Analytics -->
-
 </head>
+
 <body>
-<body onload="prettyPrint();">
+
 <div id="home">
-  <a href="http://www.flossmanuals.net"><img src="_templates/fm_resources/top_read_back.gif" border="0" alt="" /></a>
+  <a href="/"><img src="templates/fm_resources/back-home.png" border="0" alt="" /></a>
 </div>
 
-</div>
 
 <div id="pdf">
-  <a href="<epub-location/>"><img src="templates/fm_resources/epub.gif" border="0" alt="" /></a>
-  <a href="<pdf-location/>"><img src="templates/fm_resources/pdf.gif" border="0" alt="" /></a>
-  <a href="_all"><img src="_templates/fm_resources/print.gif" border="0" alt="" /></a>
- 
+  <a href="<epub-location/>"><img src="templates/fm_resources/epub.png" border="0" alt="" /></a>
+  <a href="<pdf-location/>"><img src="templates/fm_resources/pdf.png" border="0" alt="" /></a>
+  <a href="_all"><img src="_templates/fm_resources/print.png" border="0" alt="" /></a> 
 </div>
 
 
 <div id="index-book-title">
 	<book-title/>
-
 </div>
+
+
 <div id="main">
-  <div class="navbar">
-    <div class="arrow top left"><a href="#"><img src="templates/fm_resources/lefttext.png" height="20" alt="" /></a></div>
-    <div class="arrow top right"><a href="#"><img src="templates/fm_resources/righttext.png" height="20" alt="" /></a></div>
-  </div>
 
-
-
-<!-- Edit links changed a bit --> 
-<div id="edit-links">
-<a href="http://fi.flossmanuals.net/blog/forums/topic/<comment-name/>/?view=all"><b>KOMMENTOI</b></a>
-<a href="http://fi.flossmanuals.net/kirjoita/<muokkaa-name/>"><b>MUOKKAA</b></a><BR>
-</div>
-
+      <div class="navbar">
+        <div class="arrow top left">
+          <a href="#"><img src="templates/fm_resources/previous-arrow.png" alt="" /></a>
+        </div>
+        <div class="arrow top right">
+          <a href="#"><img src="templates/fm_resources/next-arrow.png" alt="" /></a>
+        </div>
+      </div>
 
   <div class="fm-content">
     <content-goes-here/>
-  </div>
-<br><br>
 
-<div class="comment-box">
-your comment:<br>
-<widget-comments/>
+
+
+
 </div>
-
-  <div class="navbar">
-    <div class="arrow bottom left"><a href="#"><img src="_templates/fm_resources/lefttext.png" style="height:20px !important;" alt="" /></a></div>
-    <div class="arrow bottom right"><a href="#"><img src="_templates/fm_resources/righttext.png" style="height:20px !important;" alt="" /></a></div>
-  </div>
+</div>
 </div>
 
-<br><br>
-</div>
-</div>
+
 <!-- Piwik -->
 <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? "https://fi.flossmanuals.net/piwik/piwik/" : "http://fi.flossmanuals.net/piwik/piwik/");
 document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
+</script>
+<script type="text/javascript">
 try {
 var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
 piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
 } catch( err ) {}
-</script><noscript><p><img src="http://fi.flossmanuals.net/piwik/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+</script><noscript><p>
+<img src="http://fi.flossmanuals.net/piwik/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tracking Code -->
-<analyzer/>
+
 </body>
 </html>
-
-
-
-
-
