@@ -1,108 +1,531 @@
+/*------------------------------------------------------------------ 
+Project:      Fm-fr
+Version:      1.1
+Last change:  30-11-2011
+Author:       Nicolas Dufour (jazzynico)
+Website:      http://fr.flossmanuals.net/
+--------------------------------------------------------------------
+[Table of contents] 
+1. Body
+2. Header
+3. Navigation
+  3.1. Top navigation
+  3.2. About navigation
+  3.3. Sites list
+4. Page content
+  4.1. Headings
+  4.2. Links
+  4.3. Forms
+  4.4. Front page
+    4.4.2 FM info
+    4.4.2 Books list
+  4.5. Remix
+X. Others
+-------------------------------------------------------------------*/  
+/*------------------------------------------------------------------ 
+[1. Body] 
+*/
 body {
-font-family : Trebuchet,verdana, sans-serif;
-line-height:17px;
-text-decoration:none;
-margin: 0;
-padding: 0;
-color: rgb(0, 0, 0);
-text-decoration: none;
-background-image: url('background.gif');
-}
-
-table {
-font-size: 12px; 
-color:black;
-font-family : Trebuchet,verdana, sans-serif;
-text-decoration:none;
-}
-#header
-{
-position:absolute;
-top:23px;
-width:100%;
-background-image: url('header_bg.gif');
-background-position: 700px 0px; /* this places the orange background at
-an offset, making sure it doesn't underlap the left side of the gif */
-background-repeat: no-repeat;
-}
-
-#header_image
-{
-margin-left: 270px;
-border: 0px
-}
-
-#navigation
-{
-position:absolute;
-top: 80px;
-left: 357px;
-width:50%;
-}
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: #484848;
+  background-color: #eee;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  }
 
 
-#languages
-{
-position:absolute;
-top: 40px;
-left: 740px;
-width:50%;
+
+/*------------------------------------------------------------------ 
+[2. Header ]
+*/
+
+.topbar {
+  padding: 0;
+  margin: 0;
+  height: 85px;
+  background-color: #fff;
 }
 
-.ds-note {
-border: 1px solid black; 
-float: right; 
-padding: .5em;
-margin: .5em 0 .5em 1em; 
-width: 15em; 
-background-color: #FFFFBF;
-}
-A:link {
-color:#777777;
-}
-A:visited {
-color:#777777;
-}
-A:active {
-color:#777777;
-}
-A:hover {
-color:#000000;
+/* Contournement pour la page d'informations (également dans les autres <a> de navigation) */
+.topbar a {
+  border-bottom: 0 !important;
 }
 
-div {
-	border: 0px solid #000000;
+.logo {
+  margin: 10px 0 0 10px;
+  z-index: 10;
 }
 
-div.container {
-	position: relative;
-	margin: 0 auto;
-	width: 780px;
-	height: 5000px;
+/*------------------------------------------------------------------ 
+[3. Navigation ]
+*/
+/*-- [3.1. Top navigation] --*/
+
+.topnav {
+  font-family: "DejaVu Sans", arial, sans-serif;
+  font-variant:small-caps;
+  font-size: 14px;
+  color: #666;
+  font-weight: normal;
+  position: absolute;
+  top: 1px;
+  left: 370px;
+  }
+
+.topnav ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 }
 
-div.left {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 200px;
-	height: 100%;
+.topnav li { 
+  border-left: 1px solid #999999;
+  float: left;
+  margin: 0;
+  padding: 0;
+  height: 28px;
+  }
+
+.topnav li.last {
+  border-right: 1px solid #999999;
 }
 
-div.top {
-	position: absolute;
-	top: 0px;
-	left: 170px;
-	width: 500px;
-	height: 100%;
+.topnav a {
+  display: block;
+  padding: 0.5em 1em;
+  vertical-align: top;
+  border-bottom: 0 !important;
+  }
+.topnav .active {
+  background: url("/_templates/fm_resources/topnav-selected.png") repeat-x !important;
+  text-decoration: none !important;
+  color: #666 !important;
+  font-weight: bold;
+}
+.topnav a:hover {
+  color: black;
+  background: url("/_templates/fm_resources/topnav-hover.png") repeat-x ;
+  }
+  
+/*-- [3.2. About navigation] --*/
+
+.navdiv {
+  position: absolute;
+  top: 65px;
+  background-color: #fff;
+  z-index: 20;
 }
 
-div.main {
-	position: absolute;
-	top: 150px;
-	left: 200px;
-	width: 580px;
-	height: 100%;
+.bookinav {
+  margin-left: 20px;
+}
+
+.navbox {
+  float: left;
+  font-family: "DejaVu Sans", arial, sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  }
+  
+.navbox ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border-right: 1px solid #333333;
+  height: 1.5em;
+}
+
+.navbox li { 
+  float: left;
+  margin: 0;
+  padding: 0;
+  }
+  
+.navbox a {
+  display: block;
+  color: #000;
+  padding: .2em 1em;
+  border-bottom: 0 !important;
+  }
+
+.navbox a:hover {
+  text-decoration: underline;
+  color: black;
+  }
+
+/*-- [3.2. Sites list] --*/
+#siteslist {
+  font-family: "DejaVu Sans", arial, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: white;
+  top:1px;
+  left: 780px;
+  width: 120px;
+  z-index: 20;
+}
+
+#siteslist p {
+  display: block;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+  background: #444 url("/_templates/fm_resources/down-arrow.png") 95px 6px no-repeat;
+  margin: 0;
+  padding: 4px 20px 5px 20px;
+  cursor: default;
+}
+
+#siteslist:hover p {
+  padding-bottom: 10px;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+.topdrop {
+  background-color: #333333;
+  padding: 10px;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  display: none;
+  list-style-type: none;
+  margin-top:0;
+}
+
+#siteslist:hover .topdrop {
+  display: block;
+}
+
+#siteslist .topdrop {
+  width: 120px;
+  padding: 0;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+}
+
+.topdrop a {
+  display: block;
+  padding: 7px 40px 7px 20px;
+  color: white !important;
+  font-size: 11px;
+  line-height: 11px;
+  border-bottom: 0 !important;
+}
+
+.topdrop a:hover {
+  background-color: #4d4d4d;
+  text-decoration: none;
+}
+
+.topdrop li:last-child a:hover {
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+}
+
+#siteslist .separator {
+  border-top: 1px solid #666666;
+}
+
+/*------------------------------------------------------------------ 
+[4. Content ]
+*/
+
+.content-container {
+  margin: 20px 0 100px 50px;
+  width: 800px;
+  padding: 10px;
+}
+
+.content-container img {
+  border-style: none;
+  max-width: 540px;        
+}
+
+.introtext {
+  margin: 0 0 10px 20px;
+  padding: 2px 0 2px 5px;
+  margin-top: 0px;
+  border-left: 5px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  line-height: 1.4em;
+}
+
+/*-- [4.1. Headings] --*/
+
+h1 {
+    background: #ff7f00;
+    color: #ffffff;
+    font-family: "DejaVu sans light", arial, sans-serif !important;
+    font-size: 1.8em;
+    line-height: 1.4em;
+    font-weight: normal;
+    margin: -10px -11px 10px -10px;
+    padding: 3px 20px;
+}
+
+h1 a {
+  color: #ff7f00 !important;
+}
+
+h2 {
+  font-family: "DejaVu sans", arial, sans-serif !important;
+  font-size: 1.4em;
+  color: #ff7f00;
+  border-bottom: 1px dotted gray;
+}
+
+h3 {
+  font-size: 1.2em;
+  color: #000000;
+  margin-bottom: 5px;
+}
+
+h4 {
+  font-size: 1em;
+  font-family : "DejaVu sans", arial, sans-serif;
+  font-weight : bold;
+  margin-bottom: -12px; 
+}
+
+h5 {
+  font-size: 1.0em;
+  font-family : "Arial Black";
+  margin-bottom: 0em; 
+}
+
+h6 {
+  font-size: 0.8em;
+  font-family : "Arial Black";
+  margin-bottom: 0em; 
+}
+
+/*-- [4.2. Links] --*/
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: #555555;
+}
+
+a:visited {
+  color: #555555;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #ff7f00;
+}
+
+/*-- [4.3. Forms] --*/
+
+label {
+  cursor: pointer;
+  line-height: 12px;
+  margin-top: 2px;
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+select, input, textarea {
+  background-color: #f5f5f5;
+  border:1px solid black;
+  cursor: pointer;
+  margin: 5px 0;
+}
+
+select:focus, input:focus, textarea:focus {
+  border: 1px solid #cc6600;
+  background-color: #ffffdd;
+}
+
+/*-- [4.4 Front page] --*/
+/*-- [4.4.1 FM info] --*/
+
+.fm-info {
+  width: 200px; 
+  padding: 5px;
+  float: left;
+  line-height: 1.4em;
+}
+
+.fm-info h2 {
+  font-family: "DejaVu sans", arial, sans-serif !important;
+  font-weight: normal;
+  font-style: oblique;
+  font-size: 1.4em;
+  color: #666666;
+  border-bottom: 1px solid #cccccc;
+}
+
+.fm-info a:link {
+  color: #ff7f00;
+}
+
+.fm-info a:visited {
+  color: #ff7f00;
+}
+
+.fm-info a:hover {
+  text-decoration: underline;
+  color: #ff7f00;
+}
+
+/*-- [4.4.2 Books list] --*/
+
+.books-list {
+  width: 540px;
+  margin-top: 20px;
+  padding-left: 220px; 
+}
+
+.books-list table {
+  border-left: 1px solid #999999;
+  empty-cells:hide;
+
+}
+
+.books-list td {
+  border: 1px solid #C6C6C6;
+  border-bottom: 2px solid #C6C6C6;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background: #fff;
+  padding: 5px;
+  text-align: center;
+  width: 33%;
+  empty-cells:hide;
+}
+
+.books-list h1{
+  margin: 0px;
+  background: #aaaaaa;
+  padding: 2px 20px;
+  font-size: 1.5em;
+  border-left: 1px solid #999999;
+}
+
+.books-list h2 {
+  font-size: 1.3em;
+  font-weight: normal;
+  margin: 5px 0 10px 0;
+  border-bottom: 1px dotted #666666;
+  color: #666666;
+}
+
+.books-list table {
+  width: 100%;
+  border-spacing: 10px; 
+}
+
+p.name {
+  font-size: 1.1em;
+  padding-bottom: 0;
+  margin: 5px 0 0 0;
+  empty-cells:hide;
+}
+
+p.name small {
+  position: relative;
+  bottom: 3px;
+  color: #ff7f00;
+  font-size: 0.7em;
+}
+
+p.translations {
+  font-size: 0.7em;
+  margin: 0 0 5px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+/*-- [4.5. Remix] --*/
+
+.heder { color: red; background-color: #ff7f00}
+
+.topic { color: black; }
+
+.title { color: black; background-color: #f0f0f0}
+
+#remixnav #step1 a{
+  background-color: #fff;
+}
+
+.remixmenu {
+  font-family: arial, sans-serif;
+  border: 1px solid #ff7f00;
+  float: left;
+  margin-right: 10px;
+}
+
+.remixmenu a {
+  display: block;
+  color: #000;
+  font-weight: bold;
+  padding: .3em 1.2em;
+  background-color: #eee;
+}
+
+.remixmenu a:hover {
+  color: #fff;
+  background-color: #ff7f00 !important;
+}
+
+#remixcontent {
+  padding: 20px 10px 0 10px;
+}
+
+#remixcontent ol {
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ccc;
+}
+
+#thelist1 a, #thelist2 a {
+  text-decoration: None;
+}
+
+#thelist1, #thelist2{
+  font-family: arial, sans-serif;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  list-style-type: none;
+  padding: 4px;
+  margin: 0;
+}
+
+#thelist1 li, #thelist2 li {
+  border: 1px solid black;
+  background-color: #fff;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/*------------------------------------------------------------------ 
+[X. Others ]
+*/
+
+.shadow {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  -moz-box-shadow: 4px 4px 5px #848284; /* FF3.5+ */
+  -webkit-box-shadow: 4px 4px 5px #848284; /* Saf3.0+, Chrome */
+  box-shadow: 4px 4px 5px #848284; /* Opera 10.5, IE 9.0 */
+  /*
+  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#848284')";
+  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#848284'); */
 }
 
 pre, span.Code, span.verbatim {
@@ -119,151 +542,5 @@ padding-top: 0.2em;
 padding-bottom: 0.2em;
 color : black;
 }
-			
-
-.ds-kbd {
-background-color: #efefef;
-margin-left: 2em;
-margin-right: 2em;
-padding: .5em 1em .5em 1em;
-font-family: monospace;
-}
-
-.ds-contentcontainer {
-padding: 0em .5em .5em 0em;
-}
 
 
-.ds-innercontentcontainer {
-line-height: 1.3;
-clear: both;
-padding-top: 1em;
-}
-
-.ds-nmcontent {
-line-height: 1.3;
-}
-
-
-.ds-innercontentcontainer ol, .ds-innercontentcontainer ul, .ds-innercontentcontainer li {
-line-height: 1.3em;
-margin-top: 0.2em;
-margin-bottom: 0.1em;
-}
-
-.ds-nmcontent ol, .ds-nmcontent ul, .ds-nmcontent li {
-line-height: 1.3em;
-margin-top: 0.2em;
-margin-bottom: 0.1em;
-}
-
-
-/*
- *  a modified version of
- *  http://www.thenoodleincident.com/tutorials/typography/css/real.css
- *
- *  One could optionally remove everything below.
- */
-
-hr {
-border : none;
-background-color : #361b13;
-color : #000000;
-height : 10px;
-margin-bottom: 20px; 
-margin-top: 20px; 
-}
-
-blockquote {
-}
-
-ul, li {
-margin-bottom: 5px; 
-margin-top: 0px; 
-}
-
-h1 {
-font-size: 24px;
-font-family : Arial,verdana, sans-serif;
-font-weight : Bold;
-margin-bottom: 10px; 
-margin-top: 0px;
-line-height: 32px; 
-letter-spacing: -1px; 
-text-decoration:none;
-color:#ff7f00;
-}
-
-h2 {
-font-size: 16px;
-font-family : Arial,verdana, sans-serif;
-margin-bottom: 5px;
-margin-top: 0px;
-padding-top : 15px;
-text-decoration:none;
-color:#ff7f00;
-}
-
-h3 {
-font-size: 12px;
-font-family : Arial,verdana, sans-serif;
-margin-bottom: 5px; 
-text-decoration:none;
-color:#000000;
-}
-
-h4 {
-font-size: 1em;
-font-family : Arial,verdana, sans-serif;
-font-weight : Bold;
-margin-bottom: -12px; 
-}
-
-h5 {
-font-size: 1.0em;
-font-family : Arial Black;
-margin-bottom: 0em; 
-}
-
-h6 {
-font-size: 0.8em;
-font-family : Arial Black;
-margin-bottom: 0em; 
-}
-
-/* 
- * this might cause more problems that it solves, but fixed-width type
- * is extremely tiny in Firefox with some sizing methods (eg with 76% 
- * font-sizing)
-*/
- 
-body kbd, body tt, body code {
-font-size: x-small;
-}
-p { 
-	margin-top: 1em; 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
