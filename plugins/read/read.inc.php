@@ -165,29 +165,40 @@ function read_tagreplace($hook_args) {
 	$info=objectToArray($info);
 	$thisBook = searchArray($info,'dir',$book);
 	} 
-	$title= $thisBook[0]['title'];
-	$pdf= $thisBook[0]['pdf'];
-	$epub= $thisBook[0]['epub'];
-	$chapternamed = $chapter;
-	$chapternamed = str_replace("index","Johdanto",$chapternamed);
-	$chapternamed = preg_replace("/^ch..../", "", $chapternamed);
-	$chapternamed = str_replace("/_/", " ", $chapternamed);
-	$chapternamed = ucfirst($chapternamed); 
-        $chapternamed = str_replace("-", " ", $chapternamed);
-	$commentname = strtolower($title);
-	$commentnamed = str_replace(" ", "-", $commentname); 
-	$muokkaaname = $commentnamed;
-	$output = preg_replace("[<book-title/>]",$title,$hook_args);
-	$output = preg_replace("[<pdf-location/>]",$pdf,$output);
-	$output = preg_replace("[<epub-location/>]",$epub,$output);
-        $output = preg_replace("[<comment-name/>]",$commentnamed,$output);
-        $output = preg_replace("[<chapter-name/>]",$chapternamed,$output);
-	$output = preg_replace("[<muokkaa-name/>]",$muokkaaname,$output);
-	$output = preg_replace("[<book-name/>]",$book,$output);
-	$output = preg_replace("[<file-name/>]",$chapter,$output);
-	return $output;
-}
+        $title= $thisBook[0]['title'];
+        $pdf= $thisBook[0]['pdf'];
+        $epub= $thisBook[0]['epub'];
+        $modified= $thisBook[0]['modified'];
+        $published= $thisBook[0]['date'];
+        $description= $thisBook[0]['description'];
+        $category= $thisBook[0]['category'];
 
+
+
+
+        $output = preg_replace("[<book-title/>]",$title,$hook_args);
+
+        $output = preg_replace("[<pdf-location/>]",$pdf,$output);
+        $output = preg_replace("[<epub-location/>]",$epub,$output);
+
+        $chapternamed=$output;
+  
+        $pattern = "/<h1>(.*?)<\/h1>/";
+
+        $chaptername = preg_match($pattern, $chapternamed, $matches);
+
+        $chaptername=($matches[1]);
+
+
+        $output = preg_replace("[<chapter-name/>]",$chaptername,$output);
+        $output = preg_replace("[<book-name/>]",$book,$output);
+        $output = preg_replace("[<file-name/>]",$chapter,$output);
+        $output = preg_replace("[<modified/>]",$modified,$output);
+        $output = preg_replace("[<description/>]",$description,$output);
+        $output = preg_replace("[<published/>]",$published,$output);
+        $output = preg_replace("[<category/>]",$category,$output);
+        return $output;
+}
 
 function read_initialize() {
   add_hook("before_display", "read_beforedisplay");
