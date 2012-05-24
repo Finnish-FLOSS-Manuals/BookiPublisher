@@ -14,36 +14,38 @@ function ratedOutput ($info2,$tablerows){
   $categories=array_unique($categories);
 
   foreach ($info2 as $key=>$value){
-  if (strtolower($info2[$key]["status"])=="no status"){
-			$info2[$key]["bookrating"]=5;
-		$thisCategory=$info2[$key]["category"];
-		$categoryRating[$thisCategory]+=5;
-	}
-	if (strtolower($info2[$key]["status"])=="new" || strtolower($info2[$key]["status"])=="updated"|| strtolower($info2[$key]["status"])=="major update") {
-		$thisCategory=$info2[$key]["category"];
-		$categoryRating[$thisCategory]+=5;
-		$thisBook=$info2[$key]["title"];
-		$bookRating[$thisBook]+=5;
-		$daysSinceCreated = 90 + (strtotime($info2[$key]["date"]) - strtotime(strftime("%Y-%m-%d %H:%M"))) / (60 * 60 * 24);
-		if ($daysSinceCreated <= 0) $daysSinceCreated=0;
-		$categoryRating[$thisCategory]+=$daysSinceCreated;
-		$bookRating[$thisBook]+=$daysSinceCreated;
-		$daysSinceModified = 45 + (strtotime($info2[$key]["modified"]) - strtotime(strftime("%Y-%m-%d %H:%M"))) / (60 * 60 * 24);
-		if ($daysSinceModified <= 0) $daysSinceModified=0;
-		$categoryRating[$thisCategory]+=$daysSinceModified;
-		$bookRating[$thisBook]+=$daysSinceModified;
-		if (strtolower($info2[$key]["status"])==("major update")) {
-			$bookRating[$thisBook]+=15;
-			$categoryRating[$thisCategory]+=5;
-		}
-		if (strtolower($info2[$key]["status"])==("new")) {
-			$bookRating[$thisBook]+=10;
-			$categoryRating[$thisCategory]+=20;
-		}
-	
-		$info2[$key]["bookrating"]=$bookRating[$thisBook];
-	}
+        if (strtolower($info2[$key]["status"])=="ei tilaa"){
+                        $info2[$key]["bookrating"]=5;
+                $thisCategory=$info2[$key]["category"];
+                $categoryRating[$thisCategory]+=5;
+        }
+        if (strtolower($info2[$key]["status"])=="uusi" || strtolower($info2[$key]["status"])=="päivitetty"|| strtolower($info2[$key]["status"])=="merkittäv\
+ä päivitys") {
+                $thisCategory=$info2[$key]["category"];
+                $categoryRating[$thisCategory]+=5;
+                $thisBook=$info2[$key]["title"];
+                $bookRating[$thisBook]+=5;
+                $daysSinceCreated = 90 + (strtotime($info2[$key]["date"]) - strtotime(strftime("%Y-%m-%d %H:%M"))) / (60 * 60 * 24);
+                if ($daysSinceCreated <= 0) $daysSinceCreated=0;
+                $categoryRating[$thisCategory]+=$daysSinceCreated;
+                $bookRating[$thisBook]+=$daysSinceCreated;
+                $daysSinceModified = 45 + (strtotime($info2[$key]["modified"]) - strtotime(strftime("%Y-%m-%d %H:%M"))) / (60 * 60 * 24);
+                if ($daysSinceModified <= 0) $daysSinceModified=0;
+                $categoryRating[$thisCategory]+=$daysSinceModified;
+                $bookRating[$thisBook]+=$daysSinceModified;
+                if (strtolower($info2[$key]["status"])==("merkittävä päivitys")) {
+                        $bookRating[$thisBook]+=15;
+                        $categoryRating[$thisCategory]+=5;
+                }
+                if (strtolower($info2[$key]["status"])==("uusi")) {
+                        $bookRating[$thisBook]+=10;
+                        $categoryRating[$thisCategory]+=20;
+                }
+
+                $info2[$key]["bookrating"]=$bookRating[$thisBook];
+        }
 }
+
   @arsort($categoryRating);
 
   $sorter = new Sorter();
@@ -122,9 +124,16 @@ function read_index() {
       $chaptercontent=@file_get_contents($chapterfile);
       $content .= $chaptercontent;
     }
-//    $content = addTemplate('book', $content);
-$content = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>'.$book.'</title><style type="text/css">.menu-goes-here { display: none }</style><body><div style="width: 600px;">'.$content.'</div></body></html>';
+$content = '<html lang="fi"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta http-equiv="Content-Language" content="fi" /><\
+title>'.$book.'</title><style type="text/css">.menu-goes-here { display: none }</style><script type="text/javascript">var _gaq = _gaq || [];_gaq.push(["_se\
+tAccount", "UA-27919770-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = \
+true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName\
+("script")[0]; s.parentNode.insertBefore(ga, s);})();</script></head><body><div style="width: 600px;">'.$content.'</div><img src="http://fi.flossmanuals.ne\
+t/piwik/piwik/piwik.php?idsite=1&amp;rec=1" style="border:0" alt="" />';
     echo $content;
+
+echo "</body></html>";
+
   } else {
     if ($chapter === '')
       $chapter = "index";
