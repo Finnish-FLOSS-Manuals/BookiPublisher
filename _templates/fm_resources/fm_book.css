@@ -21,7 +21,7 @@ X. Others
 body {
   font-family : trebuchet, verdana, sans-serif;
   color: #333;
-  background-color: #666;
+  background-color: white;
   font-size: 12px;
   line-height:17px;
 }
@@ -51,6 +51,7 @@ img {
   -webkit-border-radius: 0 10px 10px 0;
   -moz-border-radius: 0 10px 10px 0;
   border-radius: 0 10px 10px 0;
+  border: 1px solid black;
 }
 
 #index-book-title {
@@ -101,10 +102,10 @@ img {
 }
 
 #pdf {
-  position: absolute;
   left: 8px;
   top: 180px;
   z-index:1;
+  position:absolute;
 }
 
 #pdf a {
@@ -118,7 +119,7 @@ img {
 }
 
 div.navbar {
-  height: 30px;
+  height: 100px;
 }
 
 /*-- [2.2. Page navigation] --*/
@@ -132,11 +133,11 @@ div.arrow {
 }
 
 .arrow.right{
-  left: 940px;
+  left: 922px;
 }
 
 .arrow.top{
-  top: 50px;
+  top: 200px;
 }
 
 .arrow.bottom{
@@ -196,7 +197,7 @@ a:hover {
 
 #main {
   width: 670px;
-  border: 10px solid #333;
+  border: 1px solid black;
   border-top: 0;
   padding: 0px;
   margin: 0px;
@@ -207,6 +208,7 @@ a:hover {
 }
 
 #main-content{
+  top:10px;
   margin: 0 10px 0 10px;
   min-height:600px;
 }
