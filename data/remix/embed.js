@@ -1,4 +1,3 @@
-
 var _config = { "width":           "854",
                 "height":          "500px",
 		"padding":         "3px", 
@@ -77,7 +76,7 @@ function initViewer() {
     var page = FLOSSConfig.pages[i];
 
     if(page[3] == 1) {
-       elems += '<li style="'+topicStyle+'"><a style="'+linkStyle+'" target="flossframe" href="http://localhost/bookipublisher/booki/'+page[0]+'/'+page[1]+'?skin='+_config["skin"]+'">'+page[2]+'</a>';
+       elems += '<li style="'+topicStyle+'"><a style="'+linkStyle+'" target="flossframe" href="http://en.flossmanuals.net/booki/'+page[0]+'/'+page[1]+'?skin='+_config["skin"]+'">'+page[2]+'</a>';
     } else {
        elems += '<li class="heading" style="'+headingStyle+'">'+page[2]+'</li>';
     }
