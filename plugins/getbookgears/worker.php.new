@@ -1,0 +1,245 @@
+<?php
+include_once("../../config.inc.php");
+include_once('Mail.php');
+include_once("../../lib/functions.inc.php");
+include_once("../../lib/simpledom.inc.php");
+include_once("../../lib/classes/F3.php");
+//include_once("../../lib/classes/axon.php");
+
+
+$worker= new GearmanWorker();
+$worker->addServer();
+$worker->addFunction("getepub", "my_getepub_function");
+$worker->addFunction("getpdf", "my_getpdf_function");
+$worker->addFunction("getbook", "my_getbook_function");
+while ($worker->work());
+
+function my_getepub_function ($job) {
+  $serialzed= unserialize($job->workload());
+  $book= $serialzed[0];
+  $email= $serialzed[1];
+  $epuburl=OBJAVI_SERVER_URL."?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=epub";	
+  $gotit = tempnam(INSTALLED_DIR."/tmp/", "epub_");
+  file_put_contents($gotit, file_get_contents($epuburl));
+
+  //find the location of the published epub on the objavi server
+  $file = file_get_contents($gotit);
+  if(strpos($file, "books/")) {
+    $start=strpos($file, "books/");
+    $end=strpos($file, "\"",$start);
+    $epub_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
+  }
+  $epub = file_get_contents($epub_location);
+  file_put_contents(INSTALLED_DIR."/tmp/$book.epub",$epub);
+  rename(INSTALLED_DIR."/tmp/$book.epub", INSTALLED_DIR."/".BOOKI_DIR."/$book/$book.epub");
+
+  //send the email
+  $recipients = $email.",adam@flossmanuals.net";
+  $headers['From']    = 'adam@flossmanuals.net';
+  $headers['To']      = $email.",adam@flossmanuals.net";
+  $headers['Subject'] = 'epub done';
+  $body = "check ". $book;
+  $params['sendmail_path'] = '/usr/sbin/sendmail';
+  $mail_object =& Mail::factory('sendmail', $params);
+  $mail_object->send($recipients, $headers, $body);
+
+  return "done";
+}
+
+function my_getpdf_function ($job) {
+  $serialzed= unserialize($job->workload());
+  $book= $serialzed[0];
+  $email= $serialzed[1];
+  $pdfurl=OBJAVI_SERVER_URL."?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=web";
+  $gotit = tempnam(INSTALLED_DIR."/tmp/", "pdf_");
+  file_put_contents($gotit, file_get_contents($pdfurl));
+
+  //find the location of the published pdf on the objavi server
+  $file = file_get_contents($gotit);
+  if(strpos($file, "books/")) {
+    $start=strpos($file, "books/");
+    $end=strpos($file, "\"",$start);
+    $pdf_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
+  }
+  $pdf = file_get_contents($pdf_location);
+  file_put_contents(INSTALLED_DIR."/tmp/$book.pdf",$pdf);
+  rename(INSTALLED_DIR."/tmp/$book.pdf", INSTALLED_DIR."/".BOOKI_DIR."/$book/$book.pdf");
+
+  //send the email
+  $recipients = $email.',adam@flossmanuals.net';
+  $headers['From']    = 'adam@flossmanuals.net';
+  $headers['To']      = $email.',adam@xs4all.nl';
+  $headers['Subject'] = 'pdf done';
+  $body = "check ". $book;
+  $params['sendmail_path'] = '/usr/sbin/sendmail';
+  $mail_object =& Mail::factory('sendmail', $params);
+  $mail_object->send($recipients, $headers, $body);
+
+  return "done";
+}
+
+
+function my_getbook_function ($job) {
+  $email_log="";
+  $serialzed= unserialize($job->workload());
+  $book= $serialzed[0];
+  $email= $serialzed[1];
+  $gotit = tempnam(INSTALLED_DIR."/tmp/", "book_");
+  $template=rawurlencode("<content-goes-here /><menu-goes-here/>");
+  $url=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=templated_html&html_template=".$template;
+  file_put_contents($gotit, file_get_contents($url));
+
+  $email_log.="DEBUG:".$gotit.", \n";
+
+  $file = file_get_contents($gotit);
+  if(strpos($file, "books/")) {
+    $start=strpos($file, "books/");
+    $end=strpos($file, "\"",$start);
+    $bookurl= substr($file,$start,$end-$start);
+  }
+  sleep(180);
+  $file = file_get_contents(OBJAVI_SERVER_URL."/".$bookurl.".tar.gz");
+  file_put_contents(INSTALLED_DIR."/tmp/$book.tar.gz",$file);
+  $untarDir = preg_split("[/]",trim(shell_exec("cd ".INSTALLED_DIR."/tmp/; tar -ztf $book.tar.gz")));
+  shell_exec("tar -zxvf ".INSTALLED_DIR."/tmp/$book.tar.gz --directory ".INSTALLED_DIR."/tmp/");
+
+  $email_log.=$bookurl.", \n";
+
+  $filelist = array();
+  if ($dh = opendir(INSTALLED_DIR."/tmp/".$untarDir[0])) {
+    while (($file = readdir($dh)) !== false) {
+      $filelist[] = $file;
+    }
+    closedir($dh);
+  }
+
+
+  $html = file_get_html(INSTALLED_DIR."/tmp/".$untarDir[0].'/contents.html');
+
+  $dupsarray[]="";
+
+  foreach($html->find('ul[class=menu-goes-here]') as $toc)
+  {
+    foreach($toc->find('li') as $section)
+    {
+      if(!isset($section->class)) {
+        $link= $section->find('a',0);
+        $orig=$link->href;
+        $orig=preg_replace("[ch([0-9]*)_]","", $orig);
+        $dupsarray[]=$orig;
+      }
+    }
+  }
+
+
+  $arraycount=array_count_values($dupsarray);
+  foreach ($arraycount as $value){
+    if ($value>1) $domakedirs=$value;
+  }
+  if ($domakedirs>1) {
+        $email_log.="do make dirs \n";
+
+    foreach ($filelist as $file) {
+      if($file != "." && $file != ".." && $file!="static") {
+        if ($file != "contents.html") {
+          $newfile=substr($file,6,-4)."html";
+        } else {
+          $newfile=substr($file,0,-4)."html";
+        }
+
+        $email_log.=$file.", \n";
+
+        $newhtml = file_get_html(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$file);
+        foreach($newhtml->find('ul[class=menu-goes-here]') as $toc)
+        {
+          foreach($toc->find('li') as $section)
+          {
+            if(isset($section->class)) {
+              $sectiondir=$section->innertext;
+              $sectiondir=preg_replace("/[^a-zA-Z0-9\s]/", "", $sectiondir);
+              $sectiondir=strtolower(str_replace(" ","-",$sectiondir));
+              $email_log.="\nSECTION : $sectiondir \n";
+              @mkdir(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$sectiondir, 0777);
+            }
+
+            if(!isset($section->class)) {
+              $link= $section->find('a',0);
+              $orig=$link->href;
+              if ($orig == $file) $chapterdir=$sectiondir;
+              $orig=preg_replace("[ch([0-9]*)_]","", $orig);
+              $array[]=$orig;
+              $orig=preg_replace("(\.html)","", $orig);
+              $email_log.="$orig \n";
+              $link->href=strtolower("/".$book."/".$sectiondir."/".$orig);
+            }
+          }
+        }
+
+        #$page = preg_replace("[href=\"([\w!\/-]*).html\"]", "href=\"/$book/\\1\"", $page);
+        $newhtml = preg_replace("[\"(static/[^\"]*)\"]", "\"".BOOKI_DIR."/$book/\\1\"", $newhtml);
+        $newhtml = preg_replace("[<html dir=\"LTR\"><body>]", "", $newhtml);
+        #$page = preg_replace("[ch([0-9]*)_]","", $page);
+        $newhtml = preg_replace("[</body></html>]", "", $newhtml);
+        if ($file=='index.html') file_put_contents(INSTALLED_DIR."/tmp/".$untarDir[0]."/index.html",$newhtml);
+        file_put_contents(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$file,$newhtml);
+        $email_log.="orig=".INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$file."\n";
+        $email_log.="moved to =".INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$newfile."\n";
+        rename(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$file,INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$newfile);
+        if (USE_TIDY=="true")
+          shell_exec("tidy -m -config ".INSTALLED_DIR."/data/tidy.config ".INSTALLED_DIR."/tmp/".$untarDir[0]."/".$chapterdir."/".$newfile);
+      }
+    }
+
+  } else {
+
+
+    foreach ($filelist as $file) {
+      if($file != "." && $file != ".." && $file!="static") {
+        if ($file != "index.html" && $file != "contents.html") {
+          $newfile=substr($file,6,-4)."html";
+        } else {
+          $newfile=substr($file,0,-4)."html";
+        }
+
+        $email_log.=$file.", \n";
+
+        $page = file_get_contents(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$file);
+        $page = preg_replace("[href=\"([\w!\/-]*).html\"]", "href=\"/$book/\\1\"", $page);
+        $page = preg_replace("[\"(static/[^\"]*)\"]", "\"".BOOKI_DIR."/$book/\\1\"", $page);
+        $page = preg_replace("[<html dir=\"LTR\"><body>]", "", $page);
+        $page = preg_replace("[ch([0-9]*)_]","", $page);
+        $page = preg_replace("[</body></html>]", "", $page);
+
+
+
+
+        file_put_contents(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$file,$page);
+        rename(INSTALLED_DIR."/tmp/".$untarDir[0]."/".$file,INSTALLED_DIR."/tmp/".$untarDir[0]."/".$newfile);
+        if (USE_TIDY=="true")
+          shell_exec("tidy -m -config ".INSTALLED_DIR."/data/tidy.config ".INSTALLED_DIR."/tmp/".$untarDir[0]."/".$newfile);
+      }
+    }
+  }
+
+
+
+  shell_exec( " cp -r -a ".INSTALLED_DIR."/tmp/".$untarDir[0]."/* ".INSTALLED_DIR."/".BOOKI_DIR."/".$book." 2>&1 " );
+
+
+  //send the email
+  $recipients = $email.',adam@flossmanuals.net';
+  $headers['From']    = 'adam@flossmanuals.net';
+  $headers['To']      = $email.',adam@xs4all.nl';
+  $headers['Subject'] = 'book done';
+  $body = "check ". $book."\n\n\n".$email_log;
+  $params['sendmail_path'] = '/usr/sbin/sendmail';
+  $mail_object =& Mail::factory('sendmail', $params);
+  $mail_object->send($recipients, $headers, $body);
+
+  return "done";
+
+
+}
+
+
+php?>
