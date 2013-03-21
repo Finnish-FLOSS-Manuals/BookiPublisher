@@ -360,7 +360,7 @@ function getbook_admin() {
                         $start=strpos($file, "books/");
                         $end=strpos($file, "\"",$start);
                         $epub_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
-                $logger="getting epub from here " . $epub_location";
+                $logger="getting epub from here " . $epub_location;
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
                 }
                 
