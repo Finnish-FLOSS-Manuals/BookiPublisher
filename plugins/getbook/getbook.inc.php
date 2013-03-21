@@ -186,7 +186,7 @@ function getbook_admin() {
 	}
 	foreach ($filelist as $file) {	
                 if($file != "." && $file != ".." && $file!="static") {
-                        $newfile=substr($file,0,-4)."txt";
+                        $newfile=substr($file,0,-4)."html";
                         $page = file_get_contents(BOOKI_DIR."/$book/$file");
                         $page = preg_replace("[href=\"([\w!\/-]*).html\"]", "href=\"/$book/\\1\"", $page);
                         $page = preg_replace("[\"(static/[^\"]*)\"]", "\"".BOOKI_DIR."/$book/\\1\"", $page);
@@ -374,7 +374,7 @@ function getbook_admin() {
                 curl_setopt($ch, CURLOPT_TIMEOUT, 360);
                 $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
-                $pdf = curl_exec ($ch);
+                $epub = curl_exec ($ch);
                 curl_close ($ch);
                 $logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
