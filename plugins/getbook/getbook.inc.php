@@ -346,13 +346,21 @@ function getbook_admin() {
 		$gotit = tempnam("tmp/", "epub_");
 		$logger="tempnam is $gotit";
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-		try {
-			file_put_contents($gotit, file_get_contents($epuburl));
-		} catch (Exception $e) {
-			$html.=_("you are not online");
-		$logger="failed (not online?)";
-		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
-		}
+              	$ch = curl_init();
+              	
+		curl_setopt($ch, CURLOPT_URL, $epuburl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
+		file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
+                $pdf = curl_exec ($ch);
+		curl_close ($ch);
+		$logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
+		file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
+
 
 		//find the location of the published epub on the objavi server
 		$file = file_get_contents($gotit);
