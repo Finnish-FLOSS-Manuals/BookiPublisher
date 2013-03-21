@@ -388,8 +388,8 @@ function getbook_admin() {
 	//return done page
   	$html.="<h1>"._("GetBook Plugin")."</h1>";
   	$html.="<br>"._("Use the bookInfo plugin to edit the details.");
-		$logger="done";
-		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
+	$logger="done";
+	file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 	return $html;
   }
 }
