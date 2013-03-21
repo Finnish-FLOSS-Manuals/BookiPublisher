@@ -137,9 +137,6 @@ function getbook_admin() {
                 curl_close ($ch);
   		file_put_contents("tmp/$book.tar.gz",$file);
 
-
-
-
 	//$file = "http://objavi.flossmanuals.net/".$bookurl.".tar.gz";
 	//shell_exec("wget \"".$file."\" tmp/$book.tar.gz");
 	
@@ -251,10 +248,10 @@ function getbook_admin() {
         } else {
 		$info=ObjectToArray( $info );
 		$info=replaceArrayValue($info,"dir",$book,"modified",strftime("%Y-%m-%d %H:%M"));		
-		if (isset($_POST["getPDF"])) $newepdf = BOOKI_DIR."/$book/$book.pdf";
+		if (isset($_POST["getPDF"])) $newpdf = BOOKI_DIR."/$book/$book.pdf";
 		if (isset($_POST["getEpub"])) $newepub = BOOKI_DIR."/$book/$book.epub";
-		$info=replaceArrayValue($info,"dir",$book,"epub",$newepub);		
-		$info=replaceArrayValue($info,"dir",$book,"epub",$newepub);		
+		$info=replaceArrayValue($info,"dir",$book,"epub",$newepub);
+		$info=replaceArrayValue($info,"dir",$book,"pdf",$newpdf);
 		$info=replaceArrayValue($info,"dir",$book,"status","updated!");		
 	}
 
@@ -275,11 +272,11 @@ function getbook_admin() {
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$updatetext.= "<br>"._("Getting PDF");
 		file_put_contents($update,$updatetext);
-		$pdfurl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=web&toc_header=Sisällysluettelo&license=GPLv2";
-		$logger="pdf url is $pdfurl";
+		$pdfurl=OBJAVI_SERVER_URL."?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=web&toc_header=Sisällysluettelo&license=GPLv2";
+		$logger="pdf url is " . $pdfurl;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$gotit = tempnam("tmp/", "pdf_");
-		$logger="tempnam is $gotit";
+		$logger="tempnam is " . $gotit;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 
 
@@ -341,18 +338,22 @@ function getbook_admin() {
 		$updatetext.= "<br>"._("Getting epub");
 		file_put_contents($update,$updatetext);
 		$epuburl=OBJAVI_SERVER_URL."/?book=".$book."&server=".BOOKI_SERVER_TARGET."&mode=epub";
-		$logger="epub url is $epuburl";
+		$logger="epub url is " . $epuburl;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
 		$gotit = tempnam("tmp/", "epub_");
-		$logger="tempnam is $gotit";
+		$logger="tempnam is " . $gotit;
 		file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
                 $ch = curl_init();
+            
 
                 curl_setopt($ch, CURLOPT_URL, $epuburl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 360);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+
+              $kurlaaja = curl_exec ($ch);
+              file_put_contents($gotit, $kurlaaja);
 
                 //find the location of the published epub on the objavi server
                 $file = file_get_contents($gotit);
