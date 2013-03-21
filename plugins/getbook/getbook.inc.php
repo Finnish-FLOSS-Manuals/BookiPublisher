@@ -377,9 +377,7 @@ function getbook_admin() {
                 curl_close ($ch);
                 $logger="CURL ready " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
-		
-		$epub = file_get_contents($epub_location);
-		
+				
 		file_put_contents("tmp/$book.epub",$epub);
 		rename("tmp/$book.epub", BOOKI_DIR."/$book/$book.epub");
 		$logger="moving from tmp/$book.epub to ".BOOKI_DIR."/$book/$book.epub";
