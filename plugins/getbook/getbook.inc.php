@@ -287,9 +287,9 @@ function getbook_admin() {
 
               curl_setopt($ch, CURLOPT_URL, $pdfurl);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 360);
 	      curl_setopt($ch, CURLOPT_HEADER, 0);
-	      curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+	      curl_setopt($ch, CURLOPT_TIMEOUT, 360);
               $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdfurl;
               file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
               $kurlaaja = curl_exec ($ch);
@@ -316,9 +316,9 @@ function getbook_admin() {
               curl_setopt($ch, CURLOPT_URL, $pdf_location);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	      curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 360);
               curl_setopt($ch, CURLOPT_HEADER, 0);
-              curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+              curl_setopt($ch, CURLOPT_TIMEOUT, 360);
 	      $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $pdf_location;
               file_put_contents("log/log.txt",$logger."\n",FILE_APPEND);
               $pdf = curl_exec ($ch);
@@ -350,9 +350,9 @@ function getbook_admin() {
 
                 curl_setopt($ch, CURLOPT_URL, $epuburl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 360);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 360);
 
                 //find the location of the published epub on the objavi server
                 $file = file_get_contents($gotit);
@@ -360,17 +360,17 @@ function getbook_admin() {
                         $start=strpos($file, "books/");
                         $end=strpos($file, "\"",$start);
                         $epub_location= OBJAVI_SERVER_URL."/".substr($file,$start,$end-$start);
-                $logger="getting epub from here  $epub_location";
+                $logger="getting epub from here " . $epub_location";
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
                 }
                 
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $epuburl);
+                curl_setopt($ch, CURLOPT_URL, $epub_location);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 360);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 360);
                 $logger="CURL starts " . strftime("%Y-%m-%d %H:%M") . " now from" . $epuburl;
                 file_put_contents("log/log.html",$logger."\n",FILE_APPEND);
                 $pdf = curl_exec ($ch);
