@@ -19,8 +19,7 @@ function ratedOutput ($info2,$tablerows){
                 $thisCategory=$info2[$key]["category"];
                 $categoryRating[$thisCategory]+=5;
         }
-        if (strtolower($info2[$key]["status"])=="uusi" || strtolower($info2[$key]["status"])=="päivitetty"|| strtolower($info2[$key]["status"])=="merkittäv\
-ä päivitys") {
+        if (strtolower($info2[$key]["status"])=="uusi" || strtolower($info2[$key]["status"])=="päivitetty"|| strtolower($info2[$key]["status"])=="merkittävä päivitys") {
                 $thisCategory=$info2[$key]["category"];
                 $categoryRating[$thisCategory]+=5;
                 $thisBook=$info2[$key]["title"];
@@ -116,20 +115,15 @@ function read_index() {
     return $content;
   } else if ($chapter == '_all') {
     $bookdir = BOOKI_DIR."/$book/";
-    $content = @file_get_contents("$bookdir/index.txt");
-    foreach (glob("$bookdir/*.txt") as $chapterfile) {
-      if ($chapterfile == "$bookdir/contents.txt" || $chapterfile == "$bookdir/index.txt") {
+    $content = @file_get_contents("$bookdir/index.html");
+    foreach (glob("$bookdir/*.html") as $chapterfile) {
+      if ($chapterfile == "$bookdir/contents.html" || $chapterfile == "$bookdir/index.html") {
         continue;
       }
       $chaptercontent=@file_get_contents($chapterfile);
       $content .= $chaptercontent;
     }
-$content = '<html lang="fi"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta http-equiv="Content-Language" content="fi" /><\
-title>'.$book.'</title><style type="text/css">.menu-goes-here { display: none }</style><script type="text/javascript">var _gaq = _gaq || [];_gaq.push(["_se\
-tAccount", "UA-27919770-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = \
-true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName\
-("script")[0]; s.parentNode.insertBefore(ga, s);})();</script></head><body><div style="width: 600px;">'.$content.'</div><img src="http://fi.flossmanuals.ne\
-t/piwik/piwik/piwik.php?idsite=1&amp;rec=1" style="border:0" alt="" />';
+$content = '<html lang="fi"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta http-equiv="Content-Language" content="fi" /><style type="text/css">.menu-goes-here { display: none }</style><script type="text/javascript">var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-27919770-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async =true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);})();</script><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW"></head><body><div style="width: 600px;">'.$content.'</div><img src="http://fi.flossmanuals.net/piwik/piwik/piwik.php?idsite=1&amp;rec=1" style="border:0" alt="" />';
     echo $content;
 
 echo "</body></html>";
@@ -137,7 +131,7 @@ echo "</body></html>";
   } else {
     if ($chapter === '')
       $chapter = "index";
-    $filename=BOOKI_DIR."/$book/$chapter.txt";
+    $filename=BOOKI_DIR."/$book/$chapter.html";
     $content=@file_get_contents($filename);
 
     if ($content == "") {
